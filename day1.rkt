@@ -3,16 +3,12 @@
 (define inp (file->lines "day1-p1.txt"))
 
 (define (parse inp)
-  (let loop ([gathered '()]
-             [current '()]
-             [remaining inp])
-    (cond [(null? remaining) (cons current gathered)]
-          [(equal? ""  (first remaining))
-           (loop (cons current gathered) '() (rest remaining))]
-          [else
-           (loop gathered
-                 (cons (string->number (first remaining)) current)
-                 (rest remaining))])))
+  (if (null? inp)
+      '()
+      (let-values ([(l r)
+                    (splitf-at inp (λ(x) (not (equal? x ""))))])
+        (cons (map string->number l)
+              (parse (dropf r (λ(x) (equal? x ""))))))))
 
 (define (sum lst)
   (foldl + 0 lst))
