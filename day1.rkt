@@ -1,14 +1,11 @@
 #lang racket
 
-(define inp (file->lines "day1-p1.txt"))
+(define inp (file->string "day1-p1.txt"))
 
 (define (parse inp)
-  (if (null? inp)
-      '()
-      (let-values ([(l r)
-                    (splitf-at inp (λ(x) (not (equal? x ""))))])
-        (cons (map string->number l)
-              (parse (dropf r (λ(x) (equal? x ""))))))))
+  (map (λ(bunch)
+         (map string->number (string-split bunch "\n")))
+       (string-split inp "\n\n")))
 
 (define (sum lst)
   (foldl + 0 lst))
