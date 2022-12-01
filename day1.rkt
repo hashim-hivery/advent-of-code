@@ -1,6 +1,6 @@
 #lang racket
 
-(define inp (file->string "day1-p1.txt"))
+(define (read-inp) (file->string "day1-p1.txt"))
 
 (define (parse inp)
   (map (λ(bunch)
@@ -10,17 +10,16 @@
 (define (sum lst)
   (foldl + 0 lst))
 
-(define (part1 inp)
-  (define parsed (parse inp))
-  (define sums (map sum parsed))
+(define (part1 bunches)
+  (define sums (map sum bunches))
   (apply max sums))
 
-(part1 inp)
-
-(define (part2 inp)
-  (define parsed (parse inp))
-  (define sums (map sum parsed))
+(define (part2 bunches)
+  (define sums (map sum bunches))
   (define sorted (sort sums >))
   (sum (take sorted 3)))
 
-(part2 inp)
+(module+ main
+  (define bunches (parse (read-inp)))
+  (part1 bunches)
+  (part2 bunches))
