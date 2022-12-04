@@ -32,7 +32,6 @@
   (define grouped (groups priorities))
   (define commons
     (map (λ(g)
-           ;(displayln g)
            (define sets (map list->set g))
            (sum (set->list (apply set-intersect sets))))
          grouped))
