@@ -1,50 +1,44 @@
 #lang racket
 
 (define (read-inp) (file->lines "day2.txt"))
+(define-values (ROCK PAPER SCISSORS) (values 'rock 'paper 'scissors))
 
 (define (translate move)
   (match move
-    ["A" 'rock]
-    ["B" 'paper]
-    ["C" 'scissors]
-    ["X" 'rock]
-    ["Y" 'paper]
-    ["Z" 'scissors]))
+    ["A" ROCK]
+    ["B" PAPER]
+    ["C" SCISSORS]
+    ["X" ROCK]
+    ["Y" PAPER]
+    ["Z" SCISSORS]))
 
 (define (score them me)
   (define result-score (play them me))
-  (define shape-score (hash-ref (hash 'rock 1 'paper 2 'scissors 3) me))
+  (define shape-score (hash-ref (hash ROCK 1 PAPER 2 SCISSORS 3) me))
   (+ result-score shape-score))
 
 (define (get-score them result)
-  ;; Soo lazy :D
-  (define my-play
+  (define result-score (hash-ref (hash "X" 0 "Y" 3 "Z" 6) result))
+  (define shape-score
     (match result
-      ["X"
-       (for/last ([me '(rock paper scissors)])
-         #:final (beats? them me) me)]
-      ["Y"
-       (for/last ([me '(rock paper scissors)])
-         #:final (draw? me them) me)]
-      ["Z"
-       (for/last ([me '(rock paper scissors)])
-         #:final (beats? me them) me)]))
-  (score them my-play))
+      ["X" (hash-ref (hash ROCK 3 PAPER 1 SCISSORS 2) them)]
+      ["Y" (hash-ref (hash ROCK 1 PAPER 2 SCISSORS 3) them)]
+      ["Z" (hash-ref (hash ROCK 2 PAPER 3 SCISSORS 1) them)]))
+  (+ result-score shape-score))
 
 (define (play them me)
   (cond [(draw? me them) 3]
         [(beats? me them) 6]
         [else 0]))
 
-(define (draw? me them)
-  (equal? me them))
+(define (draw? me them) (equal? me them))
 
 (define (beats? me them)
-  (match (cons me them)
-    [(cons 'rock 'scissors) #t]
-    [(cons 'paper 'rock) #t]
-    [(cons 'scissors 'paper) #t]
-    [_ #f]))
+  (cond
+    [(and (equal? me ROCK) (equal? them SCISSORS)) #t]
+    [(and (equal? me PAPER) (equal? them ROCK)) #t]
+    [(and (equal? me SCISSORS) (equal? them PAPER)) #t]
+    [else #f]))
 
 (define (sum lst)
   (foldl + 0 lst))
