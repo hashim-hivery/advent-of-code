@@ -4,8 +4,6 @@
   (map (λ(line) (map (λ(c) (- (char->integer c) 48)) (string->list line)))
        (file->lines "day8.txt")))
 
-(define (debug x) (displayln x) x)
-
 (define (part1 forest)
   (define (left-of x y) (let ([row (list-ref forest y)]) (take row x)))
   (define (right-of x y) (let ([row (list-ref forest y)]) (drop row (add1 x))))
